@@ -104,6 +104,18 @@ function renderArticles(articles) {
 function setupSearchHandlers() {
     const searchInput = document.getElementById('t2d-q');
 
+    // Prevent form submission (e.g., "search" key / magnifier action) from clearing input
+    const searchForm = document.querySelector('form.search');
+    if (searchForm) {
+        searchForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Keep current value; just (re)filter based on whatever is typed
+            const current = searchInput.value || '';
+            renderArticles(searchArticles(current));
+        }, { passive: false });
+    }
+
+
     if (!searchInput) {
         console.warn('Search input not found');
         return;
@@ -173,3 +185,27 @@ async function loadArticles() {
 
 // Load articles when page loads
 document.addEventListener('DOMContentLoaded', loadArticles);
+
+
+// === Header Date (auto) ===
+(function initHeaderDate(){
+  const el = document.getElementById('hdr-date');
+  if (!el) return;
+  try {
+    // Use US month short name in uppercase, NY timezone
+    const tz = 'America/New_York';
+    const now = new Date();
+    const month = now.toLocaleString('en-US', { month: 'short', timeZone: tz }).toUpperCase();
+    const day = now.toLocaleString('en-US', { day: 'numeric', timeZone: tz });
+    const year = now.toLocaleString('en-US', { year: 'numeric', timeZone: tz });
+    el.textContent = `${month} ${day}, ${year}`;
+  } catch (e) {
+    // Fallback without timezone if something goes wrong
+    const now = new Date();
+    const month = now.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+    const day = now.getDate();
+    const year = now.getFullYear();
+    el.textContent = `${month} ${day}, ${year}`;
+  }
+})();
+
