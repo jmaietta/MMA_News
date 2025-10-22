@@ -20,6 +20,8 @@ sources:
       url: https://www.youtube.com/feeds/videos.xml?channel_id=UCxQfUu6vIJGZDODSwhr0m9w
     - name: MMA Weekly YouTube
       url: https://www.youtube.com/feeds/videos.xml?channel_id=UC7tdFNggH_jwjJTDWqYelmA
+    - name: Chael Sonnen YouTube
+      url: https://www.youtube.com/feeds/videos.xml?channel_id=UCRlvF4jIeBWqXJDGNXfPyVw
 
   # Alternative YouTube config (if using channel_id lookup)
   youtube_feeds:
