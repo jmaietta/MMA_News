@@ -1,0 +1,51 @@
+timezone: America/New_York
+site_base: https://username.github.io/mma-news
+run_window_hours: 24
+max_items_per_category: null
+
+sources:
+  rss:
+    # Verified Active MMA News RSS Feeds
+    - name: Lowkick MMA
+      url: https://lowkickmma.com/feed
+    - name: BJPENN
+      url: https://bjpenn.com/feed
+    - name: Sherdog
+      url: https://sherdog.com/rss/news.xml
+    
+    # YouTube Feeds - these are treated as RSS but pull video metadata
+    - name: UFC Official YouTube
+      url: https://www.youtube.com/feeds/videos.xml?channel_id=UCmXmlB4-HJytD7wV0pN7SOA
+    - name: ESPN MMA YouTube
+      url: https://www.youtube.com/feeds/videos.xml?channel_id=UCkqX1c1oBIuXbovAPKsLuSA
+
+  # Alternative YouTube config (if using channel_id lookup)
+  youtube_feeds:
+    - name: UFC Official YouTube
+      channel_id: UCmXmlB4-HJytD7wV0pN7SOA
+    - name: ESPN MMA YouTube
+      channel_id: UCkqX1c1oBIuXbovAPKsLuSA
+
+exclude_domains_suffix:
+  - x.com
+  - twitter.com
+
+utm:
+  source: mma-news
+  medium: web
+
+# MMA Organizations/Companies for categorization
+companies:
+  - name: UFC
+    ticker: UFC
+    domains:
+      - ufc.com
+    rss: https://www.youtube.com/feeds/videos.xml?channel_id=UCmXmlB4-HJytD7wV0pN7SOA
+  - name: PFL
+    ticker: PFL
+    domains:
+      - pfl.com
+  - name: Bellator
+    ticker: BLT
+    domains:
+      - bellator.com
