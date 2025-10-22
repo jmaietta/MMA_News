@@ -140,8 +140,8 @@ def save_articles(articles):
     except Exception as e:
         print(f"Warning: Error sorting articles: {e}")
     
-    # Keep top 50 (instead of 30, since we're pulling 5 days)
-    articles = articles[:50]
+    # Keep top 75 (pulling 5 days of history)
+    articles = articles[:75]
     
     output = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
