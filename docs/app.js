@@ -104,30 +104,19 @@ function renderArticles(articles) {
 // Handle search input
 function setupSearchHandlers() {
     const searchInput = document.getElementById('t2d-q');
-    const clearBtn = document.getElementById('clear-search');
 
-    if (!searchInput || !clearBtn) {
-        console.warn('Search elements not found');
+    if (!searchInput) {
+        console.warn('Search input not found');
         return;
     }
 
     // Listen for input changes
     searchInput.addEventListener('input', (e) => {
         const query = e.target.value;
-        
-        // Show/hide clear button
-        clearBtn.style.display = query ? 'block' : 'none';
 
         // Search and render results
         const results = searchArticles(query);
         renderArticles(results);
-    });
-
-    // Clear search when X button is clicked
-    clearBtn.addEventListener('click', () => {
-        searchInput.value = '';
-        clearBtn.style.display = 'none';
-        renderArticles(allArticles);
     });
 }
 
