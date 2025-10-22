@@ -49,7 +49,7 @@ header.site.shadow {
 .site-inner {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0.50rem 1rem;
+    padding: 0.5rem 0.75rem;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
@@ -121,6 +121,10 @@ header.site h1 {
 
 .search input::placeholder {
     color: var(--muted);
+}
+
+.search input::-webkit-search-cancel-button {
+    display: none;
 }
 
 .clear-search-btn {
