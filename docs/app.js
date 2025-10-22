@@ -47,13 +47,14 @@ function formatDate(date) {
 
 // Create HTML for a single article
 function createArticleCard(article) {
-    const thumbnailHtml = article.thumbnail 
-        ? `<img src="${article.thumbnail}" alt="" class="article-thumb" onerror="this.style.display='none'">`
-        : '';
+    // Use thumbnail with proxy if available, otherwise use placeholder
+    const imageUrl = article.thumbnail 
+        ? `https://images.weserv.nl/?url=${encodeURIComponent(article.thumbnail)}`
+        : './logo-placeholder.png';
     
     return `
         <article>
-            ${thumbnailHtml}
+            <img src="${imageUrl}" alt="" class="article-thumb" onerror="this.src='./logo-placeholder.png'">
             <div class="article-content">
                 <div class="article-source">${article.source}</div>
                 <h2 class="article-title">
