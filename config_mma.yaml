@@ -18,6 +18,8 @@ sources:
       url: https://www.youtube.com/feeds/videos.xml?channel_id=UCO4AcsPKEkIqDmbeiZLfd1A
     - name: MMA Junkie YouTube
       url: https://www.youtube.com/feeds/videos.xml?channel_id=UCxQfUu6vIJGZDODSwhr0m9w
+    - name: MMA Weekly YouTube
+      url: https://www.youtube.com/feeds/videos.xml?channel_id=UC7tdFNggH_jwjJTDWqYelmA
 
   # Alternative YouTube config (if using channel_id lookup)
   youtube_feeds:
