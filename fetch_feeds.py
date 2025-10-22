@@ -16,6 +16,7 @@ RSS_FEEDS = [
     {"name": "Sherdog", "url": "https://sherdog.com/rss/news.xml"},
     {"name": "MMA Weekly YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UC7tdFNggH_jwjJTDWqYelmA"},
     {"name": "MMA Junkie YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCxQfUu6vIJGZDODSwhr0m9w"},
+    {"name": "Chael Sonnen YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCRlvF4jIeBWqXJDGNXfPyVw"},
     {"name": "ESPN MMA YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCO4AcsPKEkIqDmbeiZLfd1A"}
 ]
 
