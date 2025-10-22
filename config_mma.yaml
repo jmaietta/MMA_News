@@ -6,8 +6,6 @@ max_items_per_category: null
 sources:
   rss:
     # Verified Active MMA News RSS Feeds
-    - name: MMA Junkie
-      url: https://mmajunkie.usatoday.com/feed
     - name: Lowkick MMA
       url: https://lowkickmma.com/feed
     - name: BJPENN
