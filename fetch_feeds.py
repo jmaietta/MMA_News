@@ -15,7 +15,7 @@ RSS_FEEDS = [
     {"name": "BJPENN", "url": "https://bjpenn.com/feed"},
     {"name": "Sherdog", "url": "https://sherdog.com/rss/news.xml"},
     {"name": "UFC Official YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCPQDDlGe7lbgmEJ0ge7a_JA"},
-    {"name": "ESPN MMA YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCiWLfSweyRNmLpgEHekhoAg"}
+    {"name": "ESPN MMA YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCO4AcsPKEkIqDmbeiZLfd1A"}
 ]
 
 def parse_date(date_str):
