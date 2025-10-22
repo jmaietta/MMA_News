@@ -11,6 +11,7 @@ from pathlib import Path
 import re
 
 RSS_FEEDS = [
+    {"name": "MMA Junkie", "url": "https://mmajunkie.usatoday.com/feed"},
     {"name": "Lowkick MMA", "url": "https://lowkickmma.com/feed"},
     {"name": "BJPENN", "url": "https://bjpenn.com/feed"},
     {"name": "Sherdog", "url": "https://sherdog.com/rss/news.xml"},
