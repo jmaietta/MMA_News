@@ -272,7 +272,7 @@ footer {
 /* DESKTOP LAYOUT - 640px+ */
 @media (min-width: 641px) {
     .items {
-        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        grid-template-columns: 1fr;
         gap: 1rem;
     }
 
