@@ -24,18 +24,23 @@ def parse_date(date_str):
     
     try:
         if 'T' in date_str:
-            return datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+            dt = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            return dt
     except:
         pass
     
     try:
         date_clean = re.sub(r'\s[+-]\d{4}$', '', date_str.strip())
-        return datetime.strptime(date_clean, '%a, %d %b %Y %H:%M:%S')
+        dt = datetime.strptime(date_clean, '%a, %d %b %Y %H:%M:%S')
+        return dt.replace(tzinfo=timezone.utc)
     except:
         pass
     
     try:
-        return datetime.strptime(date_str[:19], '%Y-%m-%d %H:%M:%S')
+        dt = datetime.strptime(date_str[:19], '%Y-%m-%d %H:%M:%S')
+        return dt.replace(tzinfo=timezone.utc)
     except:
         pass
     
