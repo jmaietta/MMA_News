@@ -117,7 +117,7 @@ def save_articles(articles):
     """Save articles to JSON file"""
     # Sort by date (newest first)
     articles.sort(
-        key=lambda x: datetime.fromisoformat(x['pubDate'].replace('Z', '+00:00')),
+        key=lambda x: datetime.fromisoformat(x['pubDate']) if 'T' in x['pubDate'] else datetime.strptime(x['pubDate'], '%a, %d %b %Y %H:%M:%S %z'),
         reverse=True
     )
     
