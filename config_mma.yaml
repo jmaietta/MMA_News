@@ -8,8 +8,6 @@ sources:
     # Verified Active MMA News RSS Feeds
     - name: Lowkick MMA
       url: https://lowkickmma.com/feed
-    - name: Sherdog
-      url: https://sherdog.com/rss/news.xml
     
     # YouTube Feeds - these are treated as RSS but pull video metadata
     - name: ESPN MMA YouTube
