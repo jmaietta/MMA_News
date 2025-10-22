@@ -368,3 +368,35 @@ footer {
     color: var(--muted);
     padding: 2rem 1rem;
 }
+
+
+/* Header meta (tagline + date) */
+.hdr-meta {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.tagline {
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.hdr-date {
+    padding: 0.125rem 0.5rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--bg);
+}
+
+@media (min-width: 641px) {
+    .hdr-meta {
+        margin-left: 0.75rem;
+    }
+}
