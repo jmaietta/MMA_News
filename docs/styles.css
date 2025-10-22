@@ -51,8 +51,16 @@ header.site.shadow {
     margin: 0 auto;
     padding: 0.75rem 1rem;
     display: flex;
-    align-items: center;
-    gap: 1rem;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+@media (min-width: 641px) {
+    .site-inner {
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+    }
 }
 
 header.site h1 {
@@ -71,6 +79,13 @@ header.site h1 {
     display: flex;
     gap: 0.5rem;
     align-items: center;
+    width: 100%;
+}
+
+@media (min-width: 641px) {
+    .hdr-actions {
+        width: auto;
+    }
 }
 
 .search {
@@ -78,7 +93,13 @@ header.site h1 {
     display: flex;
     align-items: center;
     width: 100%;
-    max-width: 400px;
+    max-width: none;
+}
+
+@media (min-width: 641px) {
+    .search {
+        max-width: 400px;
+    }
 }
 
 .search input {
