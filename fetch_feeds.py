@@ -1,18 +1,14 @@
 #!/usr/bin/env python3
 """
-Fetch MMA news RSS feeds, download images, and save as JSON
+Fetch MMA news RSS feeds and save as JSON
 """
 
 import feedparser
 import json
-import requests
-import os
 from datetime import datetime, timezone
 from pathlib import Path
 import re
-from urllib.parse import urlparse
 
-# RSS feeds to fetch
 RSS_FEEDS = [
     {"name": "MMA Junkie", "url": "https://mmajunkie.usatoday.com/feed"},
     {"name": "Lowkick MMA", "url": "https://lowkickmma.com/feed"},
@@ -21,7 +17,6 @@ RSS_FEEDS = [
 ]
 
 def parse_date(date_str):
-    """Parse date string in any format"""
     if not date_str:
         return datetime.now(timezone.utc)
     
@@ -37,46 +32,9 @@ def parse_date(date_str):
     except:
         pass
     
-    try:
-        return datetime.strptime(date_str[:19], '%Y-%m-%d %H:%M:%S')
-    except:
-        pass
-    
     return datetime.now(timezone.utc)
 
-def download_image(image_url, article_title):
-    """Download image and save locally"""
-    if not image_url:
-        return None
-    
-    try:
-        # Create images directory
-        img_dir = Path("docs/images")
-        img_dir.mkdir(exist_ok=True)
-        
-        # Generate filename from URL
-        filename = urlparse(image_url).path.split('/')[-1]
-        if not filename or '.' not in filename:
-            filename = f"image_{hash(image_url)}.jpg"
-        
-        filepath = img_dir / filename
-        
-        # Download if not already saved
-        if not filepath.exists():
-            response = requests.get(image_url, timeout=10)
-            if response.status_code == 200:
-                with open(filepath, 'wb') as f:
-                    f.write(response.content)
-                print(f"  Downloaded: {filename}")
-        
-        return f"./images/{filename}"
-    
-    except Exception as e:
-        print(f"  Error downloading image: {e}")
-        return None
-
 def extract_thumbnail(entry):
-    """Extract thumbnail URL from feedparser entry"""
     if hasattr(entry, 'media_thumbnail') and entry.media_thumbnail:
         for thumb in entry.media_thumbnail:
             if 'url' in thumb:
@@ -100,9 +58,8 @@ def extract_thumbnail(entry):
     return None
 
 def clean_description(text):
-    """Remove HTML tags from description"""
     if not text:
-        return ""
+        return "Read more..."
     
     text = re.sub(r'<script[^>]*>.*?</script>', '', text, flags=re.DOTALL)
     text = re.sub(r'<style[^>]*>.*?</style>', '', text, flags=re.DOTALL)
@@ -111,10 +68,14 @@ def clean_description(text):
     import html
     text = html.unescape(text)
     text = re.sub(r'\s+', ' ', text).strip()
+    
+    # If too short, add default
+    if len(text) < 10:
+        return "Read more..."
+    
     return text
 
 def fetch_feeds():
-    """Fetch all RSS feeds and return articles"""
     all_articles = []
     
     for feed_config in RSS_FEEDS:
@@ -133,7 +94,6 @@ def fetch_feeds():
                 try:
                     pub_date = entry.get('published') or entry.get('updated') or datetime.now(timezone.utc).isoformat()
                     image_url = extract_thumbnail(entry)
-                    local_image = download_image(image_url, entry.get('title', '')) if image_url else None
                     
                     article = {
                         "title": entry.get('title', 'No title'),
@@ -141,7 +101,7 @@ def fetch_feeds():
                         "description": clean_description(entry.get('summary', '')),
                         "pubDate": pub_date,
                         "source": name,
-                        "thumbnail": local_image
+                        "thumbnail": image_url
                     }
                     all_articles.append(article)
                     count += 1
@@ -158,7 +118,6 @@ def fetch_feeds():
     return all_articles
 
 def save_articles(articles):
-    """Save articles to JSON file"""
     if not articles:
         print("No articles to save!")
         return
