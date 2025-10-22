@@ -1,22 +1,25 @@
 #!/usr/bin/env python3
 """
-Fetch MMA news RSS feeds and save as JSON
+Fetch MMA news RSS feeds (including YouTube) and save as JSON
+Pulls up to 5 days of history
 """
 
 import feedparser
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 import re
 
 RSS_FEEDS = [
-    {"name": "MMA Junkie", "url": "https://mmajunkie.usatoday.com/feed"},
     {"name": "Lowkick MMA", "url": "https://lowkickmma.com/feed"},
     {"name": "BJPENN", "url": "https://bjpenn.com/feed"},
-    {"name": "Sherdog", "url": "https://sherdog.com/rss/news.xml"}
+    {"name": "Sherdog", "url": "https://sherdog.com/rss/news.xml"},
+    {"name": "UFC Official YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCPQDDlGe7lbgmEJ0ge7a_JA"},
+    {"name": "ESPN MMA YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCiWLfSweyRNmLpgEHekhoAg"}
 ]
 
 def parse_date(date_str):
+    """Parse date string in any format"""
     if not date_str:
         return datetime.now(timezone.utc)
     
@@ -32,9 +35,15 @@ def parse_date(date_str):
     except:
         pass
     
+    try:
+        return datetime.strptime(date_str[:19], '%Y-%m-%d %H:%M:%S')
+    except:
+        pass
+    
     return datetime.now(timezone.utc)
 
 def extract_thumbnail(entry):
+    """Extract thumbnail URL from feedparser entry"""
     if hasattr(entry, 'media_thumbnail') and entry.media_thumbnail:
         for thumb in entry.media_thumbnail:
             if 'url' in thumb:
@@ -58,8 +67,9 @@ def extract_thumbnail(entry):
     return None
 
 def clean_description(text):
+    """Remove HTML tags from description"""
     if not text:
-        return "Read more..."
+        return ""
     
     text = re.sub(r'<script[^>]*>.*?</script>', '', text, flags=re.DOTALL)
     text = re.sub(r'<style[^>]*>.*?</style>', '', text, flags=re.DOTALL)
@@ -68,15 +78,12 @@ def clean_description(text):
     import html
     text = html.unescape(text)
     text = re.sub(r'\s+', ' ', text).strip()
-    
-    # If too short, add default
-    if len(text) < 10:
-        return "Read more..."
-    
     return text
 
 def fetch_feeds():
+    """Fetch all RSS feeds and return articles from last 5 days"""
     all_articles = []
+    five_days_ago = datetime.now(timezone.utc) - timedelta(days=5)
     
     for feed_config in RSS_FEEDS:
         name = feed_config['name']
@@ -90,16 +97,22 @@ def fetch_feeds():
                 print(f"  ⚠ Warning: {feed.bozo_exception}")
             
             count = 0
-            for entry in feed.entries[:10]:
+            for entry in feed.entries:
                 try:
-                    pub_date = entry.get('published') or entry.get('updated') or datetime.now(timezone.utc).isoformat()
+                    pub_date_str = entry.get('published') or entry.get('updated') or datetime.now(timezone.utc).isoformat()
+                    pub_date = parse_date(pub_date_str)
+                    
+                    # Only include articles from last 5 days
+                    if pub_date < five_days_ago:
+                        continue
+                    
                     image_url = extract_thumbnail(entry)
                     
                     article = {
                         "title": entry.get('title', 'No title'),
                         "link": entry.get('link', '#'),
                         "description": clean_description(entry.get('summary', '')),
-                        "pubDate": pub_date,
+                        "pubDate": pub_date_str,
                         "source": name,
                         "thumbnail": image_url
                     }
@@ -118,6 +131,7 @@ def fetch_feeds():
     return all_articles
 
 def save_articles(articles):
+    """Save articles to JSON file"""
     if not articles:
         print("No articles to save!")
         return
@@ -127,7 +141,8 @@ def save_articles(articles):
     except Exception as e:
         print(f"Warning: Error sorting articles: {e}")
     
-    articles = articles[:30]
+    # Keep top 50 (instead of 30, since we're pulling 5 days)
+    articles = articles[:50]
     
     output = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -147,7 +162,7 @@ def save_articles(articles):
         print(f"✗ Error saving articles: {e}")
 
 if __name__ == "__main__":
-    print("Fetching MMA news feeds...\n")
+    print("Fetching MMA news feeds (last 5 days)...\n")
     articles = fetch_feeds()
     print(f"\nTotal articles fetched: {len(articles)}")
     save_articles(articles)
