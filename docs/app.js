@@ -62,8 +62,7 @@ function createArticleCard(article) {
                 </h2>
                 <p class="article-description">${article.description.substring(0, 180)}</p>
                 <div class="article-footer">
-                    <span class="article-date">${formatDate(article.pubDate)}</span>
-                    <a href="${article.link}" target="_blank" rel="noopener noreferrer" class="article-link">Read More</a>
+                    <a href="${article.link}" target="_blank" rel="noopener noreferrer" style="color: var(--muted); font-size: 0.8rem;">${formatDate(article.pubDate)}</a>
                 </div>
             </div>
         </article>
