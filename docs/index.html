@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MMA News Hub</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="site">
+        <div class="site-inner">
+            <h1>🥊 MMA News</h1>
+            <div class="grow"></div>
+            <div class="hdr-actions">
+                <form class="search">
+                    <input 
+                        type="search" 
+                        id="t2d-q" 
+                        placeholder="Search news..."
+                        autocomplete="off"
+                    >
+                    <button id="clear-search" class="clear-search-btn" style="display: none;" type="button">✕</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main id="app">
+        <section id="mma-news">
+            <div id="loading">Loading articles...</div>
+            <div id="articles-container" class="items"></div>
+            <div id="search-empty" style="display: none; padding: 1rem; color: #888; text-align: center;">No articles found.</div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Last updated: <span id="last-updated">-</span></p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
