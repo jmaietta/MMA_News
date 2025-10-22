@@ -14,6 +14,7 @@ RSS_FEEDS = [
     {"name": "Lowkick MMA", "url": "https://lowkickmma.com/feed"},
     {"name": "BJPENN", "url": "https://bjpenn.com/feed"},
     {"name": "Sherdog", "url": "https://sherdog.com/rss/news.xml"},
+    {"name": "MMA Junkie YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCxQfUu6vIJGZDODSwhr0m9w"},
     {"name": "ESPN MMA YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCO4AcsPKEkIqDmbeiZLfd1A"}
 ]
 
