@@ -15,9 +15,9 @@ sources:
     
     # YouTube Feeds - these are treated as RSS but pull video metadata
     - name: UFC Official YouTube
-      url: https://www.youtube.com/feeds/videos.xml?channel_id=UCmXmlB4-HJytD7wV0pN7SOA
+      url: https://www.youtube.com/feeds/videos.xml?channel_id=UCPQDDlGe7lbgmEJ0ge7a_JA
     - name: ESPN MMA YouTube
-      url: https://www.youtube.com/feeds/videos.xml?channel_id=UCkqX1c1oBIuXbovAPKsLuSA
+      url: https://www.youtube.com/feeds/videos.xml?channel_id=UCiWLfSweyRNmLpgEHekhoAg
 
   # Alternative YouTube config (if using channel_id lookup)
   youtube_feeds:
