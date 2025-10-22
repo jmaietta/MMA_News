@@ -8,8 +8,6 @@ sources:
     # Verified Active MMA News RSS Feeds
     - name: Lowkick MMA
       url: https://lowkickmma.com/feed
-    - name: BJPENN
-      url: https://bjpenn.com/feed
     - name: Sherdog
       url: https://sherdog.com/rss/news.xml
     
@@ -22,6 +20,8 @@ sources:
       url: https://www.youtube.com/feeds/videos.xml?channel_id=UC7tdFNggH_jwjJTDWqYelmA
     - name: Chael Sonnen YouTube
       url: https://www.youtube.com/feeds/videos.xml?channel_id=UCRlvF4jIeBWqXJDGNXfPyVw
+    - name: Demetrious Johnson YouTube
+      url: https://www.youtube.com/feeds/videos.xml?channel_id=UCk9lx4sKRQCDTyXFaouk_vQ
 
   # Alternative YouTube config (if using channel_id lookup)
   youtube_feeds:
