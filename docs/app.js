@@ -53,6 +53,9 @@ function createArticleCard(article) {
         ? `https://images.weserv.nl/?url=${encodeURIComponent(article.thumbnail)}`
         : './logo-placeholder.png';
     
+    // Check if description exists and clean it
+    const descriptionText = article.description ? cleanDescription(article.description) : '';
+
     return `
         <article>
             <img src="${imageUrl}" alt="" class="article-thumb" onerror="this.src='./logo-placeholder.png'">
@@ -61,6 +64,7 @@ function createArticleCard(article) {
                 <h2 class="article-title">
                     <a href="${article.link}" target="_blank" rel="noopener noreferrer">${article.title}</a>
                 </h2>
+                ${descriptionText ? `<p class="article-description">${descriptionText}</p>` : ''}
                 <div class="article-footer">
                     <a href="${article.link}" target="_blank" rel="noopener noreferrer" style="color: var(--muted); font-size: 0.8rem;">${formatDate(article.pubDate)}</a>
                 </div>
