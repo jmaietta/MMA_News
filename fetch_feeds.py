@@ -18,6 +18,7 @@ RSS_FEEDS = [
     {"name": "Demetrious Johnson YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCk9lx4sKRQCDTyXFaouk_vQ"},
     {"name": "Daniel Cormier YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UC_1TBgZ5FuGSdRlrrnyJU7w"},
     {"name": "Michael Bisping YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCDrG2_1TcVkXKXXsD6Kjwig"},
+    {"name": "Ariel Helwani YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCVOdVp54jLrFhRUm4S29HeA"},
     {"name": "ESPN MMA YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCO4AcsPKEkIqDmbeiZLfd1A"}
 ]
 
