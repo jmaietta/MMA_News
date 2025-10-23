@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shoot MMA</title>
-    <link rel="stylesheet" href="styles.css?v=2025-10-23-2">
+    <link rel="stylesheet" href="styles.css?v=2025-10-23-5">
 
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
@@ -69,7 +69,7 @@
         <p>Last updated: <span id="last-updated">-</span></p>
     </footer>
 
-    <script src="app.js?v=2025-10-23-2" defer></script>
+    <script src="app.js?v=2025-10-23-5" defer></script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -80,33 +80,50 @@ if ('serviceWorker' in navigator) {
 
 <script>
 (function videoThumbEnhancer(){
-  const isYouTubeLink = (url) => /(?:youtube\.com\/watch\?v=|youtu\.be\/)/i.test(url);
-  const isYouTubeImg = (src) => /i\.ytimg\.com\//i.test(src);
+  const looksLikeYtThumb = (src) => !!src && /ytimg\.com/i.test(src);
+  const looksLikeYtUrl   = (u)   => !!u && /(youtube\.com\/watch\?v=|youtu\.be\/)/i.test(u);
+
+  function deriveWatchUrlFromThumb(src) {
+    const m = src.match(/\/vi\/([^\/\?&]+)\//i);
+    return m ? `https://www.youtube.com/watch?v=${m[1]}` : null;
+  }
 
   function enhanceArticle(article){
     if (!article || article.dataset.videoEnhanced === "1") return;
-    const linkEl = article.querySelector('.article-link');
-    const img = article.querySelector('img.article-thumb');
-    if (!img) return;
-    const linkHref = linkEl ? linkEl.getAttribute('href') : null;
-    const looksLikeYT = (linkHref && isYouTubeLink(linkHref)) || (img.src && isYouTubeImg(img.src));
-    if (!looksLikeYT) return;
 
-    if (!img.closest('a.thumb-link')) {
-      const a = document.createElement('a');
-      a.className = 'thumb-link thumb-wrap';
-      a.href = linkHref || img.src;
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
-      a.setAttribute('aria-label', 'Watch on YouTube');
-      img.replaceWith(a);
-      a.appendChild(img);
+    const img = article.querySelector('img');
+    if (!img || !looksLikeYtThumb(img.src)) return;
 
+    let href = null;
+    const anyLink = article.querySelector('a[href]');
+    if (anyLink && looksLikeYtUrl(anyLink.href)) href = anyLink.href;
+    if (!href) href = deriveWatchUrlFromThumb(img.src);
+    if (!href) return;
+
+    const existingA = img.closest('a');
+    const targetA = existingA || document.createElement('a');
+
+    if (!existingA) {
+      targetA.href = href;
+      targetA.target = '_blank';
+      targetA.rel = 'noopener noreferrer';
+      targetA.setAttribute('aria-label', 'Watch on YouTube');
+      targetA.className = 'thumb-link thumb-wrap';
+      img.replaceWith(targetA);
+      targetA.appendChild(img);
+    } else {
+      if (!looksLikeYtUrl(targetA.href)) targetA.href = href;
+      targetA.target = '_blank';
+      targetA.rel = 'noopener noreferrer';
+      targetA.classList.add('thumb-link','thumb-wrap');
+    }
+
+    if (!targetA.querySelector('.play-badge')) {
       const play = document.createElement('span');
       play.className = 'play-badge';
       play.setAttribute('aria-hidden', 'true');
       play.textContent = '▶';
-      a.appendChild(play);
+      targetA.appendChild(play);
     }
 
     article.dataset.videoEnhanced = "1";
@@ -117,15 +134,12 @@ if ('serviceWorker' in navigator) {
 
   container.querySelectorAll('article').forEach(enhanceArticle);
 
-  const mo = new MutationObserver((muts) => {
-    muts.forEach(m => {
-      m.addedNodes.forEach(node => {
-        if (node.nodeType === 1) {
-          if (node.tagName === 'ARTICLE') enhanceArticle(node);
-          node.querySelectorAll && node.querySelectorAll('article').forEach(enhanceArticle);
-        }
-      });
-    });
+  const mo = new MutationObserver(muts => {
+    for (const m of muts) for (const node of m.addedNodes) {
+      if (node.nodeType !== 1) continue;
+      if (node.tagName === 'ARTICLE') enhanceArticle(node);
+      node.querySelectorAll && node.querySelectorAll('article').forEach(enhanceArticle);
+    }
   });
   mo.observe(container, { childList: true, subtree: true });
 })();
