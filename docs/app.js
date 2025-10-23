@@ -5,7 +5,8 @@ let allArticles = [];
 async function loadArticlesFromJSON() {
     try {
         console.log('Loading articles from JSON...');
-        const response = await fetch('./mma-news.json');
+        const VERSION = new Date().toISOString().slice(0, 10);
+        const response = await fetch(`./mma-news.json?v=${VERSION}`, { cache: 'no-store' });
         
         if (!response.ok) {
             console.warn('JSON file not found. Please run fetch_feeds.py or enable GitHub Actions.');
@@ -208,4 +209,3 @@ document.addEventListener('DOMContentLoaded', loadArticles);
     el.textContent = `${month} ${day}, ${year}`;
   }
 })();
-
