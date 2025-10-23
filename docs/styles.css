@@ -408,7 +408,7 @@ footer {
 .thumb-wrap .play-badge {
   position: absolute; inset: 0; display: grid; place-items: center;
   font-size: 48px; line-height: 1; color: #fff;
-  background: rgba(0,0,0,0.18); opacity: 0.5; transition: opacity .15s ease-in-out;
+  background: rgba(0,0,0,0.18); opacity: 0.6; transition: opacity .15s ease-in-out;
   pointer-events: none;
 }
 .thumb-wrap:hover .play-badge, .thumb-wrap:focus-within .play-badge { opacity: 1; }
