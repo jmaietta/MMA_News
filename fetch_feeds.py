@@ -16,6 +16,8 @@ RSS_FEEDS = [
     {"name": "MMA Junkie YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCxQfUu6vIJGZDODSwhr0m9w"},
     {"name": "Chael Sonnen YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCRlvF4jIeBWqXJDGNXfPyVw"},
     {"name": "Demetrious Johnson YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCk9lx4sKRQCDTyXFaouk_vQ"},
+    {"name": "Daniel Cormier YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UC_1TBgZ5FuGSdRlrrnyJU7w"},
+    {"name": "Michael Bisping YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCDrG2_1TcVkXKXXsD6Kjwig"},
     {"name": "ESPN MMA YouTube", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCO4AcsPKEkIqDmbeiZLfd1A"}
 ]
 
@@ -148,7 +150,7 @@ def save_articles(articles):
         print(f"Warning: Error sorting articles: {e}")
     
     # Keep top 75 (pulling 5 days of history)
-    articles = articles[:75]
+    articles = articles[:250]
     
     output = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
