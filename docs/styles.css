@@ -438,10 +438,12 @@ footer {
 .article-actions {
     display: flex;
     justify-content: flex-end; /* Pushes buttons to the right */
-    gap: 8px; /* Spacing between the buttons */
-    padding-top: 0.75rem;
-    border-top: 1px solid var(--line); /* Visually separate actions from article content */
-    margin-top: 0.75rem;
+    gap: 6px; /* Reduced gap slightly for mobile fit */
+    /* REMOVED: padding-top, border-top, margin-top (now handled by article-footer) */
+    flex-shrink: 0; /* Ensures the buttons don't wrap and take space from the date/link */
+    
+    /* Ensure action buttons look good on desktop too (right-aligned inside flex-direction: column footer) */
+    align-self: flex-end; 
 }
 
 .article-actions button {
@@ -473,4 +475,20 @@ footer {
 .article-actions .copy-url:hover {
     background-color: var(--line);
     border-color: var(--muted);
+}
+
+@media (min-width: 641px) {
+    /* On desktop, the article-footer is flex-direction: column. 
+       We want the share buttons to be full width on their own line. */
+    .article-actions {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+
+    .article-actions button {
+        flex-grow: 1; /* Makes the buttons stretch to fill the width */
+        text-align: center;
+        padding: 0.5rem 1rem; /* Revert to a larger padding for desktop usability */
+        font-size: 0.85rem; /* Revert to original size for desktop usability */
+    }
 }
