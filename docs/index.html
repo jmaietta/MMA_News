@@ -6,7 +6,6 @@
     <title>Shoot MMA</title>
     <link rel="stylesheet" href="styles.css?v=2025-10-23-5">
 
-    <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="./icons/favicon-16x16.png">
@@ -15,7 +14,6 @@
     <meta name="theme-color" content="#000000">
 
 
-    <!-- Social Preview (Open Graph + Twitter) -->
     <meta name="description" content="The latest MMA news">
 
     <meta property="og:type" content="website">
@@ -81,7 +79,8 @@ if ('serviceWorker' in navigator) {
 <script>
 (function videoThumbEnhancer(){
   const looksLikeYtThumb = (src) => !!src && /ytimg\.com/i.test(src);
-  const looksLikeYtUrl   = (u)   => !!u && /(youtube\.com\/watch\?v=|youtu\.be\/)/i.test(u);
+  // FIX: Updated regex to include youtube.com/shorts/ for proper detection.
+  const looksLikeYtUrl   = (u)   => !!u && /(youtube\.com\/(watch\?v=|shorts\/)|youtu\.be\/)/i.test(u);
 
   function deriveWatchUrlFromThumb(src) {
     const m = src.match(/\/vi\/([^\/\?&]+)\//i);
@@ -92,32 +91,39 @@ if ('serviceWorker' in navigator) {
     if (!article || article.dataset.videoEnhanced === "1") return;
 
     const img = article.querySelector('img');
-    if (!img || !looksLikeYtThumb(img.src)) return;
+    if (!img || !looksLikeYtThumb(img.src)) return; // Exit if not a YouTube thumbnail
 
-    let href = null;
-    const anyLink = article.querySelector('a[href]');
-    if (anyLink && looksLikeYtUrl(anyLink.href)) href = anyLink.href;
-    if (!href) href = deriveWatchUrlFromThumb(img.src);
-    if (!href) return;
+    // 1. Determine the final link to use. 
+    let targetA = img.closest('a');
+    let finalHref = null;
 
-    const existingA = img.closest('a');
-    const targetA = existingA || document.createElement('a');
-
-    if (!existingA) {
-      targetA.href = href;
-      targetA.target = '_blank';
-      targetA.rel = 'noopener noreferrer';
-      targetA.setAttribute('aria-label', 'Watch on YouTube');
-      targetA.className = 'thumb-link thumb-wrap';
-      img.replaceWith(targetA);
-      targetA.appendChild(img);
-    } else {
-      if (!looksLikeYtUrl(targetA.href)) targetA.href = href;
-      targetA.target = '_blank';
-      targetA.rel = 'noopener noreferrer';
-      targetA.classList.add('thumb-link','thumb-wrap');
+    // Check if the link exists and is a valid YouTube URL (including Shorts)
+    if (targetA && looksLikeYtUrl(targetA.href)) {
+        finalHref = targetA.href;
+    } 
+    
+    // If no valid YouTube link was found (or if link needs deriving), derive standard watch link from thumbnail
+    if (!finalHref) {
+        finalHref = deriveWatchUrlFromThumb(img.src);
     }
 
+    if (!finalHref) return; // Exit if we couldn't derive any link
+
+    // 2. Ensure the image is correctly wrapped
+    if (!targetA) {
+      targetA = document.createElement('a');
+      img.replaceWith(targetA);
+      targetA.appendChild(img);
+    }
+    
+    // 3. Apply ALL necessary attributes and classes to ensure CSS works
+    targetA.href = finalHref;
+    targetA.target = '_blank';
+    targetA.rel = 'noopener noreferrer';
+    targetA.setAttribute('aria-label', 'Watch on YouTube');
+    targetA.classList.add('thumb-link','thumb-wrap'); // '.thumb-wrap' is critical for play badge CSS
+
+    // 4. Add the subtle triangle (play badge) if missing
     if (!targetA.querySelector('.play-badge')) {
       const play = document.createElement('span');
       play.className = 'play-badge';
@@ -132,8 +138,10 @@ if ('serviceWorker' in navigator) {
   const container = document.getElementById('articles-container');
   if (!container) return;
 
+  // Enhance any articles already in the DOM
   container.querySelectorAll('article').forEach(enhanceArticle);
 
+  // Use MutationObserver to enhance articles added dynamically by app.js
   const mo = new MutationObserver(muts => {
     for (const m of muts) for (const node of m.addedNodes) {
       if (node.nodeType !== 1) continue;
