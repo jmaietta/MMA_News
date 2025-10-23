@@ -91,57 +91,61 @@ if ('serviceWorker' in navigator) {
     if (!article || article.dataset.videoEnhanced === "1") return;
 
     const img = article.querySelector('img');
-    if (!img || !looksLikeYtThumb(img.src)) return; // Exit if not a YouTube thumbnail
+    let finalHref = null; // Will hold the video link if applicable
 
-    // 1. Determine the final link to use. 
-    let targetA = img.closest('a');
-    let finalHref = null;
+    // --- 1. VIDEO ENHANCEMENT LOGIC ---
+    if (img && looksLikeYtThumb(img.src)) { 
+        
+        // 1a. Determine the final link to use. 
+        let targetA = img.closest('a');
+        
+        const anyLink = article.querySelector('a[href]');
+        if (anyLink && looksLikeYtUrl(anyLink.href)) {
+            finalHref = anyLink.href;
+        } 
+        
+        if (!finalHref) {
+            finalHref = deriveWatchUrlFromThumb(img.src);
+        }
 
-    // Check if the link exists and is a valid YouTube URL (including Shorts)
-    const anyLink = article.querySelector('a[href]');
-    if (anyLink && looksLikeYtUrl(anyLink.href)) {
-        finalHref = anyLink.href;
-    } 
-    
-    // If no valid YouTube link was found, or if the original link was not wrapped around the image, 
-    // derive a standard watch link from the thumbnail ID.
-    if (!finalHref) {
-        finalHref = deriveWatchUrlFromThumb(img.src);
+        if (finalHref) { // Only proceed if we found a valid video link
+            // 1b. Ensure the image is correctly wrapped
+            if (!targetA) {
+              targetA = document.createElement('a');
+              img.replaceWith(targetA);
+              targetA.appendChild(img);
+            }
+            
+            // 1c. Apply ALL necessary attributes and classes
+            targetA.href = finalHref;
+            targetA.target = '_blank';
+            targetA.rel = 'noopener noreferrer';
+            targetA.setAttribute('aria-label', 'Watch on YouTube');
+            targetA.classList.add('thumb-link','thumb-wrap'); 
+        
+            // 1d. Add the subtle triangle (play badge) if missing
+            if (!targetA.querySelector('.play-badge')) {
+              const play = document.createElement('span');
+              play.className = 'play-badge';
+              play.setAttribute('aria-hidden', 'true');
+              play.textContent = '▶';
+              targetA.appendChild(play);
+            }
+        }
     }
-
-    if (!finalHref) return; // Exit if we couldn't derive any link
-
-    // 2. Ensure the image is correctly wrapped
-    if (!targetA) {
-      targetA = document.createElement('a');
-      img.replaceWith(targetA);
-      targetA.appendChild(img);
-    }
+    // --- END VIDEO ENHANCEMENT LOGIC ---
     
-    // 3. Apply ALL necessary attributes and classes to ensure CSS works
-    targetA.href = finalHref;
-    targetA.target = '_blank';
-    targetA.rel = 'noopener noreferrer';
-    targetA.setAttribute('aria-label', 'Watch on YouTube');
-    // Ensure 'thumb-wrap' is always added, which is critical for the play badge hover effect.
-    targetA.classList.add('thumb-link','thumb-wrap'); 
 
-    // 4. Add the subtle triangle (play badge) if missing
-    if (!targetA.querySelector('.play-badge')) {
-      const play = document.createElement('span');
-      play.className = 'play-badge';
-      play.setAttribute('aria-hidden', 'true');
-      play.textContent = '▶';
-      targetA.appendChild(play);
-    }
+    // --- 2. UNIVERSAL SHARE BUTTON LOGIC (Runs for ALL articles) ---
+    const articleFooter = article.querySelector('.article-footer');
     
-    // 5. Add Share Buttons for User Engagement (New Logic)
-    let shareContainer = article.querySelector('.article-actions');
-    if (finalHref && !shareContainer) {
-        shareContainer = document.createElement('div');
+    // Use the primary link of the article for sharing
+    let shareLink = article.querySelector('a[href]')?.href; 
+
+    if (shareLink && articleFooter && !articleFooter.querySelector('.article-actions')) {
+        let shareContainer = document.createElement('div');
         shareContainer.className = 'article-actions';
         
-        // Get the title for the share text
         const titleElement = article.querySelector('.article-title');
         const title = titleElement ? titleElement.textContent.trim() : 'Shoot MMA News';
 
@@ -150,7 +154,7 @@ if ('serviceWorker' in navigator) {
         xButton.className = 'share-x';
         xButton.textContent = 'Share to X';
         xButton.onclick = () => {
-            const url = encodeURIComponent(finalHref);
+            const url = encodeURIComponent(shareLink);
             const tweetText = encodeURIComponent(title);
             window.open(`https://twitter.com/intent/tweet?url=${url}&text=${tweetText}`, '_blank');
         };
@@ -162,7 +166,7 @@ if ('serviceWorker' in navigator) {
         copyButton.textContent = 'Copy URL';
         copyButton.onclick = async () => {
             try {
-                await navigator.clipboard.writeText(finalHref); 
+                await navigator.clipboard.writeText(shareLink); 
                 copyButton.textContent = 'Copied!';
                 setTimeout(() => copyButton.textContent = 'Copy URL', 2000);
             } catch (err) {
@@ -172,9 +176,10 @@ if ('serviceWorker' in navigator) {
         };
         shareContainer.appendChild(copyButton);
 
-        // Append the new share container to the article
-        article.appendChild(shareContainer);
+        // Append the share container to the article footer for in-line mobile placement
+        articleFooter.appendChild(shareContainer);
     }
+    // --- END UNIVERSAL SHARE BUTTON LOGIC ---
 
     article.dataset.videoEnhanced = "1";
   }
