@@ -78,5 +78,59 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+
+<script>
+(function videoThumbEnhancer(){
+  const isYouTubeLink = (url) => /(?:youtube\.com\/watch\?v=|youtu\.be\/)/i.test(url);
+  const isYouTubeImg = (src) => /i\.ytimg\.com\//i.test(src);
+
+  function enhanceArticle(article){
+    if (!article || article.dataset.videoEnhanced === "1") return;
+    const linkEl = article.querySelector('.article-link');
+    const img = article.querySelector('img.article-thumb');
+    if (!img) return;
+    const linkHref = linkEl ? linkEl.getAttribute('href') : null;
+    const looksLikeYT = (linkHref && isYouTubeLink(linkHref)) || (img.src && isYouTubeImg(img.src));
+    if (!looksLikeYT) return;
+
+    if (!img.closest('a.thumb-link')) {
+      const a = document.createElement('a');
+      a.className = 'thumb-link thumb-wrap';
+      a.href = linkHref || img.src;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.setAttribute('aria-label', 'Watch on YouTube');
+      img.replaceWith(a);
+      a.appendChild(img);
+
+      const play = document.createElement('span');
+      play.className = 'play-badge';
+      play.setAttribute('aria-hidden', 'true');
+      play.textContent = '▶';
+      a.appendChild(play);
+    }
+
+    article.dataset.videoEnhanced = "1";
+  }
+
+  const container = document.getElementById('articles-container');
+  if (!container) return;
+
+  container.querySelectorAll('article').forEach(enhanceArticle);
+
+  const mo = new MutationObserver((muts) => {
+    muts.forEach(m => {
+      m.addedNodes.forEach(node => {
+        if (node.nodeType === 1) {
+          if (node.tagName === 'ARTICLE') enhanceArticle(node);
+          node.querySelectorAll && node.querySelectorAll('article').forEach(enhanceArticle);
+        }
+      });
+    });
+  });
+  mo.observe(container, { childList: true, subtree: true });
+})();
+</script>
+
 </body>
 </html>
