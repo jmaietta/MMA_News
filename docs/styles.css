@@ -421,3 +421,14 @@ footer {
 /* Make whole image keyboard-focusable */
 .thumb-link { display: block; outline: none; }
 .thumb-link:focus .play-badge { opacity: 1; }
+
+/* --- Video thumbnail overlay: small enhancements --- */
+.thumb-wrap { aspect-ratio: 16 / 9; cursor: pointer; }
+.thumb-wrap .play-badge { mix-blend-mode: normal; }
+@media (min-width: 641px) {
+  /* Keep consistent width in row layout when images are 140px wide */
+  article .thumb-wrap { width: 140px; flex-shrink: 0; align-self: flex-start; }
+}
+@media (min-width: 641px) {
+  article .thumb-wrap > img { width: 100%; height: auto; }
+}
