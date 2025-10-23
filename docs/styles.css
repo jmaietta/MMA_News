@@ -432,3 +432,45 @@ footer {
 @media (min-width: 641px) {
   article .thumb-wrap > img { width: 100%; height: auto; }
 }
+
+/* --- New CSS for Article Actions/Share Buttons --- */
+
+.article-actions {
+    display: flex;
+    justify-content: flex-end; /* Pushes buttons to the right */
+    gap: 8px; /* Spacing between the buttons */
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line); /* Visually separate actions from article content */
+    margin-top: 0.75rem;
+}
+
+.article-actions button {
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+    border: 1px solid var(--line);
+    flex-shrink: 0;
+}
+
+/* Specific Style for Share to X */
+.article-actions .share-x {
+    color: #fff;
+    background-color: #000;
+    border-color: #000;
+}
+.article-actions .share-x:hover {
+    background-color: #333;
+}
+
+/* Specific Style for Copy URL */
+.article-actions .copy-url {
+    color: var(--ink);
+    background-color: var(--card);
+}
+.article-actions .copy-url:hover {
+    background-color: var(--line);
+    border-color: var(--muted);
+}
