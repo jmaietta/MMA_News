@@ -24,6 +24,8 @@ sources:
       url: https://www.youtube.com/feeds/videos.xml?channel_id=UC_1TBgZ5FuGSdRlrrnyJU7w
     - name: Michael Bisping YouTube
       url: https://www.youtube.com/feeds/videos.xml?channel_id=UCDrG2_1TcVkXKXXsD6Kjwig
+    - name: Ariel Helwani YouTube
+      url: https://www.youtube.com/feeds/videos.xml?channel_id=UCVOdVp54jLrFhRUm4S29HeA
 
   # Alternative YouTube config (if using channel_id lookup)
   youtube_feeds:
