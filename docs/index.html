@@ -134,6 +134,47 @@ if ('serviceWorker' in navigator) {
       play.textContent = '▶';
       targetA.appendChild(play);
     }
+    
+    // 5. Add Share Buttons for User Engagement (New Logic)
+    let shareContainer = article.querySelector('.article-actions');
+    if (finalHref && !shareContainer) {
+        shareContainer = document.createElement('div');
+        shareContainer.className = 'article-actions';
+        
+        // Get the title for the share text
+        const titleElement = article.querySelector('.article-title');
+        const title = titleElement ? titleElement.textContent.trim() : 'Shoot MMA News';
+
+        // --- Button 1: Share to X (Twitter) ---
+        const xButton = document.createElement('button');
+        xButton.className = 'share-x';
+        xButton.textContent = 'Share to X';
+        xButton.onclick = () => {
+            const url = encodeURIComponent(finalHref);
+            const tweetText = encodeURIComponent(title);
+            window.open(`https://twitter.com/intent/tweet?url=${url}&text=${tweetText}`, '_blank');
+        };
+        shareContainer.appendChild(xButton);
+
+        // --- Button 2: Copy URL ---
+        const copyButton = document.createElement('button');
+        copyButton.className = 'copy-url';
+        copyButton.textContent = 'Copy URL';
+        copyButton.onclick = async () => {
+            try {
+                await navigator.clipboard.writeText(finalHref); 
+                copyButton.textContent = 'Copied!';
+                setTimeout(() => copyButton.textContent = 'Copy URL', 2000);
+            } catch (err) {
+                console.error('Failed to copy URL: ', err);
+                copyButton.textContent = 'Failed';
+            }
+        };
+        shareContainer.appendChild(copyButton);
+
+        // Append the new share container to the article
+        article.appendChild(shareContainer);
+    }
 
     article.dataset.videoEnhanced = "1";
   }
