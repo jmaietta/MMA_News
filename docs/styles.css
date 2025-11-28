@@ -218,32 +218,28 @@ article:hover {
     display: block;
 }
 
-/* New CSS-Only Video Play Badge */
+/* YouTube Play Button Badge */
 .thumb-link.is-video::after {
-    content: '▶';
+    content: '';
     position: absolute; 
     top: 50%; 
     left: 50%; 
     transform: translate(-50%, -50%);
-    width: 48px; 
-    height: 48px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.6); 
-    color: white; 
-    font-size: 24px;
-    border-radius: 50%; 
-    border: 2px solid rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(2px); 
-    transition: transform 0.2s ease, background 0.2s;
+    width: 68px;
+    height: 48px;
+    background-image: url('yt_icon_red_digital.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.9;
+    transition: transform 0.2s ease, opacity 0.2s;
     pointer-events: none;
     z-index: 10;
 }
 
 .thumb-link.is-video:hover::after {
-    background: var(--mma); 
     transform: translate(-50%, -50%) scale(1.1);
+    opacity: 1;
 }
 
 /* Article content */
