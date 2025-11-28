@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shoot MMA</title>
-    <link rel="stylesheet" href="styles.css?v=2025-10-23-5">
+    <link rel="stylesheet" href="styles.css?v=2025-11-28">
 
     <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32x32.png">
@@ -13,9 +13,7 @@
     <link rel="manifest" href="/icons/site.webmanifest">
     <meta name="theme-color" content="#000000">
 
-
     <meta name="description" content="The latest MMA news">
-
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://shoot-mma.com/">
     <meta property="og:site_name" content="Shoot MMA">
@@ -25,7 +23,6 @@
     <meta property="og:image:secure_url" content="https://shoot-mma.com/social/og-image.png?v=2">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Shoot MMA">
     <meta name="twitter:description" content="The latest MMA news">
@@ -35,10 +32,10 @@
 <body>
     <header class="site">
         <div class="site-inner">
-            <img src="./shoot_mma_logo_3.png" alt="Shoot MMA" style="height: 100px; width: 100px; border-radius: 12px;">
+            <img src="./shoot_mma_logo_3.png" alt="Shoot MMA" class="site-logo">
             <div class="hdr-meta">
                 <div class="tagline">The latest MMA news</div>
-                <div id="hdr-date" class="hdr-date" aria-label="Current date">OCT 22, 2025</div>
+                <div id="hdr-date" class="hdr-date" aria-label="Current date"></div> 
             </div>
             <div class="grow"></div>
             <div class="hdr-actions">
@@ -57,9 +54,14 @@
 
     <main id="app">
         <section id="mma-news">
-            <div id="loading">Loading articles...</div>
-            <div id="articles-container" class="items"></div>
-            <div id="search-empty" style="display: none; padding: 1rem; color: #888; text-align: center;">No articles found.</div>
+            <div id="loading-skeleton" class="items">
+                <article class="skeleton-card"><div class="sk-thumb"></div><div class="sk-content"><div class="sk-line w-30"></div><div class="sk-line w-80 h-title"></div><div class="sk-line w-100"></div></div></article>
+                <article class="skeleton-card"><div class="sk-thumb"></div><div class="sk-content"><div class="sk-line w-30"></div><div class="sk-line w-90 h-title"></div><div class="sk-line w-100"></div></div></article>
+                <article class="skeleton-card"><div class="sk-thumb"></div><div class="sk-content"><div class="sk-line w-30"></div><div class="sk-line w-70 h-title"></div><div class="sk-line w-100"></div></div></article>
+            </div>
+
+            <div id="articles-container" class="items" aria-live="polite"></div>
+            <div id="search-empty" style="display: none;">No articles found.</div>
         </section>
     </main>
 
@@ -67,140 +69,13 @@
         <p>Last updated: <span id="last-updated">-</span></p>
     </footer>
 
-    <script src="app.js?v=2025-10-23-5" defer></script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(console.error);
-  });
-}
-</script>
-
-<script>
-(function videoThumbEnhancer(){
-  const looksLikeYtThumb = (src) => !!src && /ytimg\.com/i.test(src);
-  // FIX: Updated regex to include youtube.com/shorts/ for proper detection.
-  const looksLikeYtUrl   = (u)   => !!u && /(youtube\.com\/(watch\?v=|shorts\/)|youtu\.be\/)/i.test(u);
-
-  function deriveWatchUrlFromThumb(src) {
-    const m = src.match(/\/vi\/([^\/\?&]+)\//i);
-    return m ? `https://www.youtube.com/watch?v=${m[1]}` : null;
-  }
-
-  function enhanceArticle(article){
-    if (!article || article.dataset.videoEnhanced === "1") return;
-
-    const img = article.querySelector('img');
-    let finalHref = null; // Will hold the video link if applicable
-
-    // --- 1. VIDEO ENHANCEMENT LOGIC ---
-    if (img && looksLikeYtThumb(img.src)) { 
-        
-        // 1a. Determine the final link to use. 
-        let targetA = img.closest('a');
-        
-        const anyLink = article.querySelector('a[href]');
-        if (anyLink && looksLikeYtUrl(anyLink.href)) {
-            finalHref = anyLink.href;
-        } 
-        
-        if (!finalHref) {
-            finalHref = deriveWatchUrlFromThumb(img.src);
-        }
-
-        if (finalHref) { // Only proceed if we found a valid video link
-            // 1b. Ensure the image is correctly wrapped
-            if (!targetA) {
-              targetA = document.createElement('a');
-              img.replaceWith(targetA);
-              targetA.appendChild(img);
-            }
-            
-            // 1c. Apply ALL necessary attributes and classes
-            targetA.href = finalHref;
-            targetA.target = '_blank';
-            targetA.rel = 'noopener noreferrer';
-            targetA.setAttribute('aria-label', 'Watch on YouTube');
-            targetA.classList.add('thumb-link','thumb-wrap'); 
-        
-            // 1d. Add the subtle triangle (play badge) if missing
-            if (!targetA.querySelector('.play-badge')) {
-              const play = document.createElement('span');
-              play.className = 'play-badge';
-              play.setAttribute('aria-hidden', 'true');
-              play.textContent = '▶';
-              targetA.appendChild(play);
-            }
-        }
+    <script src="app.js?v=2025-11-28" defer></script>
+    <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(console.error);
+      });
     }
-    // --- END VIDEO ENHANCEMENT LOGIC ---
-    
-
-    // --- 2. UNIVERSAL SHARE BUTTON LOGIC (Runs for ALL articles) ---
-    const articleFooter = article.querySelector('.article-footer');
-    
-    // Use the primary link of the article for sharing
-    let shareLink = article.querySelector('a[href]')?.href; 
-
-    if (shareLink && articleFooter && !articleFooter.querySelector('.article-actions')) {
-        let shareContainer = document.createElement('div');
-        shareContainer.className = 'article-actions';
-        
-        const titleElement = article.querySelector('.article-title');
-        const title = titleElement ? titleElement.textContent.trim() : 'Shoot MMA News';
-
-        // --- Button 1: Share to X (Twitter) ---
-        const xButton = document.createElement('button');
-        xButton.className = 'share-x';
-        xButton.textContent = 'Share to X';
-        xButton.onclick = () => {
-            const url = encodeURIComponent(shareLink);
-            const tweetText = encodeURIComponent(title);
-            window.open(`https://twitter.com/intent/tweet?url=${url}&text=${tweetText}`, '_blank');
-        };
-        shareContainer.appendChild(xButton);
-
-        // --- Button 2: Copy URL ---
-        const copyButton = document.createElement('button');
-        copyButton.className = 'copy-url';
-        copyButton.textContent = 'Copy URL';
-        copyButton.onclick = async () => {
-            try {
-                await navigator.clipboard.writeText(shareLink); 
-                copyButton.textContent = 'Copied!';
-                setTimeout(() => copyButton.textContent = 'Copy URL', 2000);
-            } catch (err) {
-                console.error('Failed to copy URL: ', err);
-                copyButton.textContent = 'Failed';
-            }
-        };
-        shareContainer.appendChild(copyButton);
-
-        // Append the share container to the article footer for in-line mobile placement
-        articleFooter.appendChild(shareContainer);
-    }
-    // --- END UNIVERSAL SHARE BUTTON LOGIC ---
-
-    article.dataset.videoEnhanced = "1";
-  }
-
-  const container = document.getElementById('articles-container');
-  if (!container) return;
-
-  // Enhance any articles already in the DOM
-  container.querySelectorAll('article').forEach(enhanceArticle);
-
-  // Use MutationObserver to enhance articles added dynamically by app.js
-  const mo = new MutationObserver(muts => {
-    for (const m of muts) for (const node of m.addedNodes) {
-      if (node.nodeType !== 1) continue;
-      if (node.tagName === 'ARTICLE') enhanceArticle(node);
-      node.querySelectorAll && node.querySelectorAll('article').forEach(enhanceArticle);
-    }
-  });
-  mo.observe(container, { childList: true, subtree: true });
-})();
-</script>
-
-</body>
+    </script>
+    </body>
 </html>
