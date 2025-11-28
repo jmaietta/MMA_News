@@ -55,11 +55,22 @@ header.site.shadow {
     gap: 0.75rem;
 }
 
+/* New Responsive Logo Style */
+.site-logo {
+    height: 60px; /* Smaller on mobile */
+    width: auto;
+    border-radius: 12px;
+    object-fit: contain;
+}
+
 @media (min-width: 641px) {
     .site-inner {
         flex-direction: row;
         align-items: center;
         gap: 1rem;
+    }
+    .site-logo {
+        height: 80px; /* Larger on desktop */
     }
 }
 
@@ -158,12 +169,7 @@ header.site h1 {
     box-shadow: var(--shadow);
 }
 
-#loading {
-    text-align: center;
-    padding: 2rem;
-    color: var(--muted);
-    font-size: 1rem;
-}
+/* Old #loading div removed */
 
 /* ARTICLE GRID - Mobile First */
 .items {
@@ -193,14 +199,51 @@ article:hover {
 }
 
 /* Article thumbnail */
+.thumb-link {
+    display: block;
+    position: relative; /* Crucial for play button overlay */
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 8px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
 .article-thumb {
     width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 9;
-    border-radius: 8px;
+    height: 100%;
     object-fit: cover;
     background: var(--bg);
     display: block;
+}
+
+/* New CSS-Only Video Play Badge */
+.thumb-link.is-video::after {
+    content: '▶';
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    width: 48px; 
+    height: 48px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.6); 
+    color: white; 
+    font-size: 24px;
+    border-radius: 50%; 
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(2px); 
+    transition: transform 0.2s ease, background 0.2s;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.thumb-link.is-video:hover::after {
+    background: var(--mma); 
+    transform: translate(-50%, -50%) scale(1.1);
 }
 
 /* Article content */
@@ -267,22 +310,36 @@ article:hover {
     white-space: nowrap;
 }
 
-.article-link {
-    display: inline-block;
-    background: var(--mma);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 999px;
-    text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 600;
-    transition: background 0.2s;
-    white-space: nowrap;
-    flex-shrink: 0;
+/* New Icon-only Share Button */
+.article-actions {
+    display: flex;
+    flex-shrink: 0; 
+}
+.btn-share {
+    background: transparent; 
+    border: 1px solid var(--line); 
+    color: var(--muted);
+    cursor: pointer; 
+    width: 32px; 
+    height: 32px; 
+    border-radius: 50%;
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    transition: all 0.2s ease; 
+    padding: 0;
 }
 
-.article-link:hover {
-    background: #e55a24;
+.btn-share:hover { 
+    color: var(--mma); 
+    border-color: var(--mma); 
+    background: rgba(255, 107, 53, 0.05);
+}
+
+.btn-share svg { 
+    width: 16px; 
+    height: 16px; 
+    fill: currentColor;
 }
 
 /* FOOTER */
@@ -307,68 +364,28 @@ footer {
         gap: 1rem;
     }
 
-    .article-thumb {
+    .thumb-link {
         width: 140px;
-        height: auto;
-        aspect-ratio: 16 / 9;
+        height: 90px; /* Set fixed height for layout consistency */
         flex-shrink: 0;
         align-self: flex-start;
     }
 
     .article-footer {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row; /* Keep it row for date and share button */
+        justify-content: space-between;
+        align-items: center;
         border-top: none;
         padding-top: 0;
         margin-top: auto;
-        gap: 0.5rem;
+        width: 100%;
     }
 
     .article-date {
-        width: 100%;
-        font-size: 0.75rem;
-    }
-
-    .article-link {
-        width: 100%;
-        text-align: center;
+        width: auto;
+        font-size: 0.8rem;
     }
 }
-
-/* DESKTOP LAYOUT - 1024px+ */
-@media (min-width: 1024px) {
-    #app {
-        padding: 2rem 1rem;
-    }
-
-    #mma-news {
-        padding: 1.5rem;
-    }
-
-    .items {
-        gap: 1.25rem;
-    }
-
-    article {
-        gap: 1.25rem;
-    }
-}
-
-/* Scroll behavior for sticky header */
-@supports (scroll-behavior: smooth) {
-    html {
-        scroll-behavior: smooth;
-    }
-}
-
-/* Utility classes */
-#search-empty {
-    grid-column: 1 / -1;
-    text-align: center;
-    color: var(--muted);
-    padding: 2rem 1rem;
-}
-
 
 /* Header meta (tagline + date) */
 .hdr-meta {
@@ -402,88 +419,32 @@ footer {
 }
 
 
-/* --- Video thumbnail overlay (non-intrusive) --- */
-.thumb-wrap { position: relative; display: block; border-radius: 8px; overflow: hidden; }
-.thumb-wrap > img { display: block; width: 100%; height: auto; object-fit: cover; }
-.thumb-wrap .play-badge {
-  position: absolute; inset: 0; display: grid; place-items: center;
-  font-size: 48px; line-height: 1; color: #fff;
-  background: rgba(0,0,0,0.18); opacity: 0.7; transition: opacity .15s ease-in-out;
-  pointer-events: none;
+/* --- Skeleton Loader --- */
+#loading-skeleton {
+    display: grid; /* Default to visible */
 }
-.thumb-wrap:hover .play-badge, .thumb-wrap:focus-within .play-badge { opacity: 1; }
-.thumb-wrap .duration {
-  position: absolute; right: 8px; bottom: 8px;
-  font: 600 12px/1 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  color: #fff; background: rgba(0,0,0,.8);
-  padding: 2px 6px; border-radius: 6px;
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
 }
-/* Make whole image keyboard-focusable */
-.thumb-link { display: block; outline: none; }
-.thumb-link:focus .play-badge { opacity: 1; }
-
-/* --- Video thumbnail overlay: small enhancements --- */
-.thumb-wrap { aspect-ratio: 16 / 9; cursor: pointer; }
-.thumb-wrap .play-badge { mix-blend-mode: normal; }
-@media (min-width: 641px) {
-  /* Keep consistent width in row layout when images are 140px wide */
-  article .thumb-wrap { width: 140px; flex-shrink: 0; align-self: flex-start; }
+.skeleton-card { display: flex; flex-direction: column; gap: 0.75rem; pointer-events: none; }
+.sk-thumb, .sk-line {
+    background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+    background-size: 200% 100%; 
+    animation: shimmer 1.5s infinite; 
+    border-radius: 6px;
 }
-@media (min-width: 641px) {
-  article .thumb-wrap > img { width: 100%; height: auto; }
-}
-
-/* --- New CSS for Article Actions/Share Buttons --- */
-
-.article-actions {
-    display: flex;
-    justify-content: flex-end; /* Pushes buttons to the right */
-    gap: 6px; /* Reduced gap slightly for mobile fit */
-    flex-shrink: 0; 
-    align-self: flex-end; 
-}
-
-.article-actions button {
-    cursor: pointer;
-    font-size: 0.68rem; /* 20% smaller for mobile (and now desktop) */
-    font-weight: 600;
-    padding: 0.4rem 0.8rem; /* 20% smaller for mobile (and now desktop) */
-    border-radius: 999px;
-    transition: background-color 0.15s ease, border-color 0.15s ease;
-    border: 1px solid var(--line);
-    flex-shrink: 0;
-}
-
-/* Specific Style for Share to X */
-.article-actions .share-x {
-    color: #fff;
-    background-color: #000;
-    border-color: #000;
-}
-.article-actions .share-x:hover {
-    background-color: #333;
-}
-
-/* Specific Style for Copy URL */
-.article-actions .copy-url {
-    color: var(--ink);
-    background-color: var(--card);
-}
-.article-actions .copy-url:hover {
-    background-color: var(--line);
-    border-color: var(--muted);
-}
+.sk-thumb { width: 100%; aspect-ratio: 16/9; }
+.sk-content { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+.sk-line { height: 14px; }
+.w-30 { width: 30%; height: 10px; margin-bottom: 4px; }
+.w-60 { width: 60%; }
+.w-80 { width: 80%; }
+.w-90 { width: 90%; }
+.w-100 { width: 100%; margin-top: auto; }
+.h-title { height: 20px; }
 
 @media (min-width: 641px) {
-    /* On desktop, the article-footer is flex-direction: column. */
-    .article-actions {
-        width: auto; /* Allow content to define width */
-        margin-top: 0.5rem;
-    }
-
-    .article-actions button {
-        flex-grow: 0; /* Stops stretching */
-        min-width: 120px; /* Enforces equal width */
-        text-align: center;
-    }
+    .skeleton-card { flex-direction: row; gap: 1rem; }
+    .sk-thumb { width: 140px; height: 90px; }
 }
