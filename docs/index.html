@@ -39,14 +39,24 @@
             </div>
             <div class="grow"></div>
             <div class="hdr-actions">
-                <form class="search">
+                <form class="search" id="search-form">
                     <input 
                         type="search" 
                         id="t2d-q" 
                         placeholder="Search news..."
                         autocomplete="off"
                     >
+                    <div class="search-spinner"></div>
                     <button id="clear-search" class="clear-search-btn" style="display: none;" type="button">✕</button>
+                    <span class="search-hint">/</span>
+                    <!-- Recent Searches Dropdown -->
+                    <div id="recent-searches" class="recent-searches">
+                        <div class="recent-searches-header">
+                            <span>Recent searches</span>
+                            <button type="button" class="recent-searches-clear" id="clear-recent">Clear</button>
+                        </div>
+                        <div id="recent-searches-list"></div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -60,14 +70,64 @@
                 <article class="skeleton-card"><div class="sk-thumb"></div><div class="sk-content"><div class="sk-line w-30"></div><div class="sk-line w-70 h-title"></div><div class="sk-line w-100"></div></div></article>
             </div>
 
+            <!-- Search Results Info -->
+            <div id="search-results-info" class="search-results-info">
+                <span class="search-results-count">
+                    Showing <span id="results-shown" class="highlight">0</span> of <span id="results-total">0</span> articles
+                </span>
+            </div>
+
             <div id="articles-container" class="items" aria-live="polite"></div>
-            <div id="search-empty" style="display: none;">No articles found.</div>
+            
+            <!-- Empty State -->
+            <div id="search-empty" style="display: none;">
+                <div class="empty-icon">🔍</div>
+                <div class="empty-text">No articles found</div>
+                <div class="empty-hint">Try a different search term</div>
+            </div>
+
+            <!-- Load More / Infinite Scroll -->
+            <div id="load-more-container" class="load-more-container" style="display: none;">
+                <button id="btn-load-more" class="btn-load-more btn-ripple">
+                    <span class="btn-text">Load More</span>
+                    <span class="spinner"></span>
+                </button>
+            </div>
+            
+            <!-- Loading More Indicator (for infinite scroll) -->
+            <div id="loading-more" class="loading-more" style="display: none;">
+                <div class="dots">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+                <span>Loading more...</span>
+            </div>
+            
+            <!-- End of Results -->
+            <div id="end-of-results" class="end-of-results" style="display: none;">
+                <div class="end-of-results-icon">✓</div>
+                <div>You've reached the end!</div>
+            </div>
+            
+            <!-- Infinite Scroll Sentinel -->
+            <div id="scroll-sentinel" class="scroll-sentinel"></div>
         </section>
     </main>
 
     <footer>
         <p>Last updated: <span id="last-updated">-</span></p>
     </footer>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+    
+    <!-- Back to Top Button -->
+    <button id="btn-back-to-top" class="btn-back-to-top" aria-label="Back to top">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
 
     <script src="app.js?v=2025-11-28" defer></script>
     <script>
