@@ -1022,3 +1022,198 @@ article.fade-in:nth-child(2) { animation-delay: 50ms; }
 article.fade-in:nth-child(3) { animation-delay: 100ms; }
 article.fade-in:nth-child(4) { animation-delay: 150ms; }
 article.fade-in:nth-child(5) { animation-delay: 200ms; }
+
+/* =====================================================
+   UFC DARK THEME — APPEND-ONLY INTEGRATION
+   -----------------------------------------------------
+   IMPORTANT:
+   • Paste this ENTIRE BLOCK at the VERY BOTTOM of your
+     existing 1,024-line CSS file.
+   • Do NOT remove or modify your current styles.
+   • This works via variable overrides + selective
+     component restyling only.
+
+   Audience: 18–34 male UFC fans
+   Strategy: visual language shift, zero layout risk
+===================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+/* =====================================================
+   1. THEME TOKENS (SAFE VARIABLE OVERRIDES)
+===================================================== */
+
+:root {
+  /* Canvas */
+  --bg: #050506;
+  --card: #0f1113;
+  --ink: #e7e9eb;
+  --ink-soft: #c9cdd2;
+  --muted: #9aa0a6;
+  --line: rgba(255,255,255,0.08);
+
+  /* UFC energy */
+  --mma: #ff3b30;              /* UFC red */
+  --mma-glow: rgba(255,59,48,0.35);
+
+  /* Elevation */
+  --shadow: 0 6px 18px rgba(0,0,0,0.45);
+  --shadow-lg: 0 16px 40px rgba(0,0,0,0.65);
+}
+
+body {
+  background:
+    radial-gradient(1200px 600px at 10% 10%, rgba(255,59,48,0.04), transparent 6%),
+    radial-gradient(800px 400px at 90% 90%, rgba(255,122,24,0.03), transparent 6%),
+    var(--bg);
+  color: var(--ink);
+}
+
+/* =====================================================
+   2. HEADER — FIGHT-NIGHT PRESENCE
+===================================================== */
+
+header.site {
+  background: linear-gradient(180deg, rgba(10,10,10,0.95), rgba(10,10,10,0.75));
+  backdrop-filter: blur(6px);
+  border-bottom-color: var(--line);
+}
+
+header.site.shadow {
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+header.site h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tagline {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.hdr-date {
+  background: rgba(255,255,255,0.04);
+  border-color: var(--line);
+  color: var(--muted);
+}
+
+/* =====================================================
+   3. SEARCH — DARK & AGGRESSIVE
+===================================================== */
+
+.search input {
+  background: rgba(255,255,255,0.04);
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+.search input:focus {
+  border-color: var(--mma);
+  box-shadow: 0 0 0 3px var(--mma-glow);
+  background: rgba(15,17,19,0.9);
+}
+
+.search-hint {
+  background: rgba(15,17,19,0.9);
+  border-color: var(--line);
+}
+
+/* =====================================================
+   4. ARTICLE CARDS — POSTER ENERGY
+===================================================== */
+
+article {
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  border-color: var(--line);
+  box-shadow: var(--shadow);
+}
+
+article::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, var(--mma), #ff7a18);
+}
+
+article:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
+
+.article-source {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.14em;
+}
+
+.article-title {
+  font-family: 'Bebas Neue', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.article-title a:hover {
+  color: var(--mma);
+}
+
+.article-footer {
+  border-top-color: var(--line);
+}
+
+/* =====================================================
+   5. CTA & FLOATING CONTROLS
+===================================================== */
+
+.btn-load-more {
+  background: linear-gradient(90deg, var(--mma), #ff7a18);
+  border: none;
+  color: #fff;
+  font-weight: 700;
+}
+
+.btn-load-more:hover {
+  box-shadow: 0 10px 30px var(--mma-glow);
+}
+
+.btn-back-to-top {
+  background: linear-gradient(180deg, #1a1a1c, #0f1113);
+  border: 1px solid var(--line);
+}
+
+.btn-back-to-top:hover {
+  background: var(--mma);
+}
+
+/* =====================================================
+   6. TOASTS & SKELETONS — DARK SAFE
+===================================================== */
+
+.toast {
+  background: #111315;
+  border: 1px solid var(--line);
+}
+
+.sk-thumb, .sk-line {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.04) 25%,
+    rgba(255,255,255,0.08) 50%,
+    rgba(255,255,255,0.04) 75%
+  );
+}
+
+/* =====================================================
+   7. REDUCED MOTION
+===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
