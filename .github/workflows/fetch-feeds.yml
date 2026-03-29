@@ -2,12 +2,27 @@ name: Fetch MMA News Feeds
 
 on:
   schedule:
-    # Mon-Fri: every 3 hours 7am-5pm EST
-    - cron: '0 12,15,18,21,0,2 * * 1-5'
-    # Sat: every hour 5pm-2am EST
-    - cron: '0 22,23,0,1,2,3,4,5,6 * * 6'
-    # Sun: every hour 9am-12pm EST
+    # GitHub Actions cron uses UTC and does not adjust for Daylight Saving Time.
+    # The Eastern Time notes below are EST equivalents; during EDT these run 1 hour later locally.
+
+    # Weekdays: Mon-Fri at 7:00am, 10:00am, 1:00pm, and 4:00pm EST
+    - cron: '0 12,15,18,21 * * 1-5'
+
+    # Weekday evenings: Sun-Thu at 7:00pm and 9:00pm EST
+    # (These execute at 00:00 and 02:00 UTC on Mon-Fri.)
+    - cron: '0 0,2 * * 1-5'
+
+    # Saturday evening into early Sunday morning: every 30 minutes
+    # Sat 5:00pm-6:30pm EST (22:00-23:30 UTC Saturday)
+    - cron: '0,30 22,23 * * 6'
+
+    # Saturday evening into early Sunday morning: every 30 minutes
+    # Sat 7:00pm EST through Sun 3:00am EST (00:00-08:00 UTC Sunday)
+    - cron: '0,30 0-8 * * 0'
+
+    # Sunday daytime: Sun 9:00am-12:00pm EST, hourly
     - cron: '0 14,15,16,17 * * 0'
+
   workflow_dispatch:
 
 permissions:
